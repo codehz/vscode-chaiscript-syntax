@@ -1,0 +1,108 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "ChaiScript",
+	"patterns": [{
+		"include": "#statements"
+	}],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control",
+				"match": "\\b(try|catch|finally|if|else|while|for|case|default|switch|return|break|continue|attr|auto|var|global|this)\\b"
+			}]
+		},
+		"statements": {
+			"patterns": [{
+				"include": "#strings"
+			}, {
+				"include": "#comments"
+			}, {
+				"include": "#keywords"
+			}, {
+				"include": "#block"
+			}, {
+				"include": "#declaration"
+			}]
+		},
+		"declaration": {
+			"patterns": [{
+				"include": "class-declaration"
+			}, {
+				"include": "function-declaration"
+			}]
+		},
+		"class-declaration": {
+			"name": "meta.class",
+			"begin": "\\b(class)\\b(?=\\s+|/[/*])",
+			"end": "(?<=\\})",
+			"patterns": [{
+				"include": "statment"
+			}]
+		},
+		"lambda-declaration": {
+			"name": "meta.function",
+			"begin": "\\b(fun\\b)(?:\\s*(\\*))?(?:(?:\\s+|(?<=\\*))([_$[:alpha:]][_$[:alnum:]]*))?\\s*",
+			"end": "(?<=\\})",
+			"patterns": [{
+				"include": "statment"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [{
+				"name": "constant.character.escape",
+				"match": "\\\\."
+			}]
+		},
+		"comments": {
+			"name": "comment",
+			"patterns": [{
+				"begin": "(^[ \\t]+)?((//)(?:\\s*((@)internal)(?=\\s|$))?)",
+				"beginCaptures": {
+					"1": {
+						"name": "punctuation.whitespace.comment.leading"
+					},
+					"2": {
+						"name": "comment.line.double-slash"
+					},
+					"3": {
+						"name": "punctuation.definition.comment"
+					},
+					"4": {
+						"name": "storage.type.internaldeclaration"
+					},
+					"5": {
+						"name": "punctuation.decorator.internaldeclaration"
+					}
+				},
+				"end": "(?=^)",
+				"contentName": "comment.line.double-slash"
+			}, {
+				"name": "comment.block",
+				"begin": "/\\*",
+				"end": "\\*/"
+			}]
+		},
+		"block": {
+			"name": "meta.block",
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.block.js"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.block.js"
+				}
+			},
+			"patterns": [{
+				"include": "#statements"
+			}]
+		}
+	},
+	"scopeName": "source.chai"
+}
