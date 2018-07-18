@@ -8,7 +8,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control",
-				"match": "\\b(try|catch|finally|if|else|while|for|case|default|switch|return|break|continue|attr|auto|var|global|this)\\b"
+				"match": "\\b(try|catch|finally|if|else|while|for|case|default|switch|return|break|continue|auto|var|global|this)\\b"
 			}]
 		},
 		"statements": {
@@ -33,16 +33,14 @@
 			}]
 		},
 		"numbers": {
-			"patterns": [
-				{
-					"match": "\\b((0(x|X)[0-9a-fA-F]([0-9a-fA-F']*[0-9a-fA-F])?)|(0(b|B)[01]([01']*[01])?)|(([0-9]([0-9']*[0-9])?\\.?[0-9]*([0-9']*[0-9])?)|(\\.[0-9]([0-9']*[0-9])?))((e|E)(\\+|-)?[0-9]([0-9']*[0-9])?)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b",
-					"name": "constant.numeric.c"
-				}
-			]
+			"patterns": [{
+				"match": "\\b((0(x|X)[0-9a-fA-F]([0-9a-fA-F']*[0-9a-fA-F])?)|(0(b|B)[01]([01']*[01])?)|(([0-9]([0-9']*[0-9])?\\.?[0-9]*([0-9']*[0-9])?)|(\\.[0-9]([0-9']*[0-9])?))((e|E)(\\+|-)?[0-9]([0-9']*[0-9])?)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b",
+				"name": "constant.numeric.c"
+			}]
 		},
 		"function_call": {
-			"name": "meta.function-call",
-			"begin": "([^\\s(^)\\.]+)(?=\\()",
+			"name": "meta.call",
+			"begin": "(\\w+)(?=\\()",
 			"beginCaptures": {
 				"1": {
 					"name": "entity.name.function"
@@ -66,14 +64,47 @@
 				"include": "#function-declaration"
 			}, {
 				"include": "#lambda-declaration"
+			}, {
+				"include": "#attr-declaration"
 			}]
+		},
+		"attr-declaration": {
+			"name": "meta.attr",
+			"begin": "\\b(attr)\\b\\s*(\\w*)::(\\w*)\\s*",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.langauge"
+				},
+				"2": {
+					"name": "entity.name.class.chaiscript"
+				},
+				"3": {
+					"name": "entity.name.function.chaiscript"
+				}
+			},
+			"end": "\\b",
+			"patterns": []
+		},
+		"direct-attr-declaration": {
+			"name": "meta.attr",
+			"begin": "\\b(attr)\\b\\s*(\\w*)\\s*",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.language"
+				},
+				"3": {
+					"name": "entity.name.function.chaiscript"
+				}
+			},
+			"end": "\\b",
+			"patterns": []
 		},
 		"class-declaration": {
 			"name": "meta.class",
-			"begin": "\\b(class)\\b\\s*(\\S*)\\s*",
+			"begin": "\\b(class)\\b\\s*(\\w*)\\s*",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword"
+					"name": "keyword.language"
 				},
 				"2": {
 					"name": "entity.name.class.chaiscript"
@@ -81,7 +112,7 @@
 			},
 			"end": "(?<=\\})",
 			"patterns": [{
-				"include": "#block"
+				"include": "#class-block"
 			}]
 		},
 		"lambda-declaration": {
@@ -89,7 +120,7 @@
 			"begin": "\\b(fun\\b)\\s*(\\[.*?\\])?\\(.*?\\)\\s*",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword"
+					"name": "keyword.language"
 				}
 			},
 			"end": "(?<=\\})",
@@ -98,22 +129,18 @@
 			}]
 		},
 		"function-declaration": {
-			"comment": "A nim procedure or method",
 			"name": "meta.proc",
 			"patterns": [{
-				"begin": "\\b(def)\\s+\\`?([^\\:\\{\\s\\`\\*\\(]*)\\`?(\\s*\\*)?\\s*(\\(|\\=|:|\\[|\\n|\\{)",
+				"begin": "\\b(def\\b)\\s*(\\w*)\\s*\\([^\\)]*?\\)(\\:.*?)?\\s*(?=\\n|{)",
 				"captures": {
 					"1": {
-						"name": "keyword.other"
+						"name": "keyword.language"
 					},
 					"2": {
 						"name": "entity.name.function.chaiscript"
-					},
-					"3": {
-						"name": "keyword.control.export"
 					}
 				},
-				"end": "\\)",
+				"end": "(?<=\\})",
 				"patterns": [{
 					"include": "#block"
 				}]
@@ -173,6 +200,26 @@
 			},
 			"patterns": [{
 				"include": "#statements"
+			}]
+		},
+		"class-block": {
+			"name": "meta.block",
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.parens.begin.bracket.round"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.parens.end.bracket.round"
+				}
+			},
+			"patterns": [{
+				"include": "#statements"
+			}, {
+				"include": "#direct-attr-declaration"
 			}]
 		}
 	},
