@@ -19,32 +19,79 @@
 			}, {
 				"include": "#keywords"
 			}, {
+				"include": "#constant"
+			}, {
 				"include": "#block"
 			}, {
 				"include": "#declaration"
+			}, {
+				"include": "#brace"
+			}]
+		},
+		"constant": {
+			"patterns": [{
+				"name": "constant.language",
+				"match": "\\b(true|false)\\b"
 			}]
 		},
 		"declaration": {
 			"patterns": [{
-				"include": "class-declaration"
+				"include": "#class-declaration"
 			}, {
-				"include": "function-declaration"
+				"include": "#function-declaration"
+			}, {
+				"include": "#lambda-declaration"
 			}]
 		},
 		"class-declaration": {
 			"name": "meta.class",
-			"begin": "\\b(class)\\b(?=\\s+|/[/*])",
+			"begin": "\\b(class)\\b\\s*(\\S*)\\s*",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword"
+				},
+				"2": {
+					"name": "entity.name.class.chaiscript"
+				}
+			},
 			"end": "(?<=\\})",
 			"patterns": [{
-				"include": "statment"
+				"include": "#block"
 			}]
 		},
 		"lambda-declaration": {
 			"name": "meta.function",
-			"begin": "\\b(fun\\b)(?:\\s*(\\*))?(?:(?:\\s+|(?<=\\*))([_$[:alpha:]][_$[:alnum:]]*))?\\s*",
+			"begin": "\\b(fun\\b)\\s*\\(.*?\\)\\s*",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword"
+				}
+			},
 			"end": "(?<=\\})",
 			"patterns": [{
-				"include": "statment"
+				"include": "#block"
+			}]
+		},
+		"function-declaration": {
+			"comment": "A nim procedure or method",
+			"name": "meta.proc",
+			"patterns": [{
+				"begin": "\\b(def)\\s+\\`?([^\\:\\{\\s\\`\\*\\(]*)\\`?(\\s*\\*)?\\s*(\\(|\\=|:|\\[|\\n|\\{)",
+				"captures": {
+					"1": {
+						"name": "keyword.other"
+					},
+					"2": {
+						"name": "entity.name.function.chaiscript"
+					},
+					"3": {
+						"name": "keyword.control.export"
+					}
+				},
+				"end": "\\)",
+				"patterns": [{
+					"include": "#block"
+				}]
 			}]
 		},
 		"strings": {
@@ -90,13 +137,13 @@
 			"begin": "\\{",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.block.js"
+					"name": "punctuation.section.parens.begin.bracket.round"
 				}
 			},
 			"end": "\\}",
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.block.js"
+					"name": "punctuation.section.parens.end.bracket.round"
 				}
 			},
 			"patterns": [{
