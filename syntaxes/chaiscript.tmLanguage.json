@@ -103,8 +103,9 @@
 					"name": "entity.name"
 				}
 			},
-			"end": "\\b",
-			"patterns": []
+			"patterns": [{
+				"include": "source.chai"
+			}]
 		},
 		"attr-declaration": {
 			"name": "meta.attr",
