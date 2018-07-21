@@ -2,7 +2,7 @@
     "name": "chaiscript-syntax",
     "displayName": "ChaiScript Syntax",
     "description": "Syntax support for ChaiScript(https://chaiscript.com/)",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "publisher": "codehz",
     "engines": {
         "vscode": "^1.25.0"
