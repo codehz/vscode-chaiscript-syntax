@@ -230,6 +230,25 @@
 					"patterns": [{
 						"match": "\\\\.",
 						"name": "constant.character.escape"
+					}, {
+						"begin": "\\${",
+						"beginCaptures": {
+							"0": {
+								"name": "constant.character.escape"
+							}
+						},
+						"end": "}",
+						"endCaptures": {
+							"0": {
+								"name": "constant.character.escape"
+							}
+						},
+						"patterns": [{
+							"include": "#statements"
+						}, {
+							"match": "\\w+",
+							"name": "entity.name"
+						}]
 					}]
 				},
 				{
